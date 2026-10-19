@@ -1,0 +1,32 @@
+name: ci
+on: [push, pull_request]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node: [22, 24]
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node }}
+      - name: Tests
+        run: node --test test/*.test.js
+      - name: Demo and bench
+        run: node examples/demo.js && node examples/bench.js
+      - name: Every commit is mine, with no trailers
+        run: |
+          me='Shinabaze Ajiya <198176976+shinabaze@users.noreply.github.com>'
+          if git log --format='%an <%ae>' | sort -u | grep -vxF "$me"; then
+            echo "a commit has another author"; exit 1
+          fi
+          if git log --format='%cn <%ce>' | sort -u | grep -vxF -e "$me" -e 'GitHub <noreply@github.com>'; then
+            echo "a commit has another committer"; exit 1
+          fi
+          if git log --format='%(trailers:only,unfold)' | grep -q .; then
+            echo "a commit message has a trailer"; exit 1
+          fi
