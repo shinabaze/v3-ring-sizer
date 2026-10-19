@@ -1,0 +1,15 @@
+{
+  "name": "v3-ring-sizer",
+  "version": "0.1.0",
+  "description": "Quote a swap through concentrated-liquidity pools exactly, or refuse. Then find the trade size that earns the most.",
+  "type": "module",
+  "exports": "./src/index.js",
+  "engines": { "node": ">=22" },
+  "scripts": {
+    "test": "node --test test/*.test.js",
+    "demo": "node examples/demo.js",
+    "bench": "node examples/bench.js"
+  },
+  "author": "Shinabaze Ajiya",
+  "license": "MIT"
+}
